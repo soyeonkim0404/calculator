@@ -1,39 +1,242 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8" />
-        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <link rel="stylesheet" href="style.css" />
-        <title>Document</title>
-    </head>
-    <body>
-        <div class="calculator">
-            <form name="forms">
-                <input type="text" name="output" readonly />
-                <input type="button" class="clear" value="c" onclick="document.forms.output.value=''" />
-                <input type="button" class="operator" value="/" onclick="document.forms.output.value +='/'" />
-                <input type="button" value="1" onclick="document.forms.output.value +='1'" />
-                <input type="button" value="2" onclick="document.forms.output.value +='2'" />
-                <input type="button" value="3" onclick="document.forms.output.value +='3'" />
-                <input type="button" class="operator" value="*" onclick="document.forms.output.value +='*'" />
-                <input type="button" value="4" onclick="document.forms.output.value +='4'" />
-                <input type="button" value="5" onclick="document.forms.output.value +='5'" />
-                <input type="button" value="6" onclick="document.forms.output.value +='6'" />
-                <input type="button" class="operator" value="+" onclick="document.forms.output.value +='+'" />
-                <input type="button" value="7" onclick="document.forms.output.value +='7'" />
-                <input type="button" value="8" onclick="document.forms.output.value +='8'" />
-                <input type="button" value="9" onclick="document.forms.output.value +='9'" />
-                <input type="button" class="operator" value="-" onclick="document.forms.output.value +='-'" />
-                <input type="button" class="dot" value="." onclick="document.forms.output.value +='.'" />
-                <input type="button" value="0" onclick="document.forms.output.value +='0'" />
-                <input
-                    type="button"
-                    class="operator result"
-                    value="="
-                    onclick="document.forms.output.value =eval(document.forms.output.value)"
-                />
-            </form>
-        </div>
-    </body>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">    
+    <title>Document</title>
+</head>
+<body>
+    <!-- <main>
+      <input type="text" readonly />
+
+      <div class="button-wrap">
+        <button class="ac" class="ac">AC</button>
+
+        <button class="operator-divide">÷</button>
+
+        <button class="number-7">7</button>
+        <button class="number-8">8</button>
+        <button class="number-9">9</button>
+
+        <button class="operator-multi">×</button>
+
+        <button class="number-4">4</button>
+        <button class="number-5">5</button>
+        <button class="number-6">6</button>
+
+        <button class="operator-minus">-</button>
+
+        <button class="number-1">1</button>
+        <button class="number-2">2</button>
+        <button class="number-3">3</button>
+
+        <button class="operator-plus">+</button>
+
+        <button class="number-0 zero">0</button>
+
+        <button>.</button>
+
+        <button class="equals">=</button>
+      </div>
+    </main> -->
+
+    <main>
+      <input type="text" readonly />
+
+      <div class="button-wrap">
+        <button class="ac" class="ac">AC</button>
+
+        <button class="operator-divide">÷</button>
+
+        <button data-type="number">7</button>
+        <button data-type="number">8</button>
+        <button data-type="number">9</button>
+
+        <button class="operator-multi">×</button>
+
+        <button data-type="number">4</button>
+        <button data-type="number">5</button>
+        <button data-type="number">6</button>
+
+        <button class="operator-minus">-</button>
+
+        <button data-type="number">1</button>
+        <button data-type="number">2</button>
+        <button data-type="number">3</button>
+
+        <button class="operator-plus">+</button>
+
+        <button data-type="number" class="zero">0</button>
+
+        <button>.</button>
+
+        <button class="equals">=</button>
+      </div>
+    </main>
+
+    <script>
+      let nm1 = '';
+      let nm2 = '';
+      let operator = '';
+      const $buttons = document.querySelectorAll('button');
+      const $input = document.querySelector('input');
+      const $equals = document.querySelector('.equals');
+      const $ac = document.querySelector('.ac');
+
+      $buttons.forEach((e) => {
+        e.addEventListener('click',(v) => {
+          if(e.dataset.type === 'number'){
+            if(!operator){
+              nm1 += v.target.textContent;
+              $input.value += v.target.textContent;
+              return;
+            }
+            if(nm1){
+              $input.value = '';
+            }
+            nm2 += v.target.textContent;
+            $input.value += v.target.textContent;
+          }
+        })
+      });
+
+       const onClickOp = (op) => () => {
+        if(nm1){
+          operator = op;
+         //$input.value += op;
+        }else{
+          alert('숫자를 먼저 입력하세요');
+        }
+      }
+
+       const onCompute = () => {
+        switch(operator){
+            case 'divide': 
+              $input.value = parseInt(nm1) / parseInt(nm2);
+              break;
+            case 'multi': 
+              $input.value = parseInt(nm1) * parseInt(nm2);
+              break;
+            case 'minus': 
+              $input.value = parseInt(nm1) - parseInt(nm2);
+              break;
+            case 'plus': 
+              $input.value = parseInt(nm1) + parseInt(nm2);
+              break;
+            default:
+              break;
+        }
+      }
+
+      document.querySelector('.operator-divide').addEventListener('click', onClickOp('divide'));
+      document.querySelector('.operator-multi').addEventListener('click', onClickOp('multi'));
+      document.querySelector('.operator-minus').addEventListener('click', onClickOp('minus'));
+      document.querySelector('.operator-plus').addEventListener('click', onClickOp('plus'));
+ 
+      $equals.addEventListener('click', () => {
+        if(nm2){
+          onCompute(); 
+          nm1 = $input.value;
+          nm2 = '';
+          operator = '';
+        }
+      });
+
+      $ac.addEventListener('click',() => {
+        nm1 = '';
+        nm2 = '';
+        operator = '';
+        $input.value = '';
+      });
+    
+    </script>
+
+
+
+<!-- <script>
+      let nm1 = '';
+      let nm2 = '';
+      let operator = '';
+      const $buttons = document.querySelectorAll('button');
+      const $input = document.querySelector('input');
+      const $equals = document.querySelector('.equals');
+      const $ac = document.querySelector('.ac');
+
+      const onClickNum = (e) => {
+        if(!operator){
+          nm1 += e.target.textContent;
+          $input.value += e.target.textContent;
+          return;
+        }
+        if(nm1){
+          $input.value = '';
+        }
+        nm2 += e.target.textContent;
+        $input.value += e.target.textContent;
+      }
+
+      const onClickOp = (op) => () => {
+        if(nm1){
+          operator = op;
+         //$input.value += op;
+        }else{
+          alert('숫자를 먼저 입력하세요');
+        }
+      }
+
+       const onCompute = () => {
+        switch(operator){
+            case 'divide': 
+              $input.value = parseInt(nm1) / parseInt(nm2);
+              break;
+            case 'multi': 
+              $input.value = parseInt(nm1) * parseInt(nm2);
+              break;
+            case 'minus': 
+              $input.value = parseInt(nm1) - parseInt(nm2);
+              break;
+            case 'plus': 
+              $input.value = parseInt(nm1) + parseInt(nm2);
+              break;
+            default:
+              break;
+        }
+      }
+
+      document.querySelector('.number-0').addEventListener('click', onClickNum);
+      document.querySelector('.number-1').addEventListener('click', onClickNum);
+      document.querySelector('.number-2').addEventListener('click', onClickNum);
+      document.querySelector('.number-3').addEventListener('click', onClickNum);
+      document.querySelector('.number-4').addEventListener('click', onClickNum);
+      document.querySelector('.number-5').addEventListener('click', onClickNum);
+      document.querySelector('.number-6').addEventListener('click', onClickNum);
+      document.querySelector('.number-7').addEventListener('click', onClickNum);
+      document.querySelector('.number-8').addEventListener('click', onClickNum);
+      document.querySelector('.number-9').addEventListener('click', onClickNum);
+
+      document.querySelector('.operator-divide').addEventListener('click', onClickOp('divide'));
+      document.querySelector('.operator-multi').addEventListener('click', onClickOp('multi'));
+      document.querySelector('.operator-minus').addEventListener('click', onClickOp('minus'));
+      document.querySelector('.operator-plus').addEventListener('click', onClickOp('plus'));
+ 
+      $equals.addEventListener('click', () => {
+        if(nm2){
+          onCompute(); 
+          nm1 = $input.value;
+          nm2 = '';
+          operator = '';
+        }
+      });
+
+      $ac.addEventListener('click',() => {
+        nm1 = '';
+        nm2 = '';
+        operator = '';
+        $input.value = '';
+      });
+    
+</script> -->
+</body>
 </html>
